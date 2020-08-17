@@ -31,23 +31,28 @@ const showPrompt = () => {
 const delForThisSheet = () => {
   const feather = showPrompt()
   const sheet = SpreadsheetApp.getActive().getActiveSheet()
+  //if(sheet.getLastRow()>0){
     delBlankColumns(sheet, feather)
     delBlankRows(sheet, feather)
+  //}
 }
 
 const delForAllSheets = () => {
   const feather = showPrompt()
   const sheets = SpreadsheetApp.getActive().getSheets()
   for(sheet of sheets){
-    delBlankColumns(sheet, feather)
-    delBlankRows(sheet, feather)
+    if(sheet.getLastRow()>0){
+      delBlankColumns(sheet, feather)
+      delBlankRows(sheet, feather)
+    }
   } 
 }
 
 
 let delBlankColumns = (sheet, feather = 0) => {
   let currentSheet = sheet || SpreadsheetApp.getActive().getActiveSheet()
-  const lastColumn = currentSheet.getLastColumn()
+  const lastColumn = currentSheet.getLastColumn() || 1
+  console.log(currentSheet.getLastColumn())
   const numBlankColumns = currentSheet.getMaxColumns() - lastColumn
   if(numBlankColumns - feather >0){
     currentSheet.deleteColumns(lastColumn+1, numBlankColumns - feather)
@@ -56,7 +61,7 @@ let delBlankColumns = (sheet, feather = 0) => {
 
 let delBlankRows = (sheet, feather = 0) => {
   let currentSheet = sheet || SpreadsheetApp.getActive().getActiveSheet()
-  const lastRow = currentSheet.getLastRow()
+  const lastRow = currentSheet.getLastRow() || 1
   const numBlankRows = currentSheet.getMaxRows() - lastRow
   if(numBlankRows - feather >0){
     currentSheet.deleteRows(lastRow+1, numBlankRows)
